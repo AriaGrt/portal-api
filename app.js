@@ -3,8 +3,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const dashboardRouter = require('./routes/dashboardRouter')
+const usersRouter = require('./routes/userRouter');
 
 const app = express();
 
@@ -12,9 +12,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-mongoose.connect('mongodb://localhost/portal-api');
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/dashboard', dashboardRouter)
+
+app.use('/user', usersRouter);
 
 module.exports = app;
